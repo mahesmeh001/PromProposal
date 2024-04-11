@@ -29,6 +29,7 @@
       padding: 0;
       font-family: 'Cormorant Garamond', serif;
     }
+
     .container {
       background-color: rgba(255, 255, 255, 0.8); /* Add a semi-transparent white background to the container */
       padding: 20px;
@@ -54,6 +55,21 @@
         transform: translate(-100vw, -100vh) rotate(720deg); /* Move the hearts diagonally and rotate */
       }
     }
+
+    /* Shake animation */
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+
+    .shake {
+      animation: shake 0.5s;
+    }
+
+
   </style>
 </head>
 <body>
@@ -65,44 +81,46 @@
         <p class="text-center font-italic">Made with love</p>
         <form id="quiz-form">
           <div id="question1" class="question">
-            <div class="form-group">
-              <label for="q1">Question 1: What is 2 + 2?</label>
-              <select id="q1" class="form-control" name="q1" onchange="showNextQuestion('question2', this)">
-                <option value="">Select an answer</option>
-                <option value="4" data-correct="true">4</option>
-                <option value="3">3</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-              </select>
-            </div>
+          <div class="form-group">
+            <label for="q1">What is my favorite face of yours?</label>
+            <select id="q1" class="form-control" name="q1" onchange="showNextQuestion('question2', this)">
+              <option value="">Select an answer</option>
+              <option data-correct="true">Pouting</option>
+              <option>Sleeping</option>
+              <option>Smiling</option>
+              <option>Yapping</option>
+            </select>
           </div>
+          </div>
+          <br>
           <div id="question2" class="question">
             <div class="form-group" style="display: inherit;">
-              <label for="q2">Question 2: What is the capital of France?</label>
+              <label for="q2">Why do you have such squishy cheeks?</label>
               <select id="q2" class="form-control" name="q2" onchange="showNextQuestion('question3', this)">
-                <option value="">Select an answer</option>
-                <!-- Add data-correct attribute to the correct answer -->
-                <option value="Paris" data-correct="true">Paris</option>
-                <option value="London">London</option>
-                <option value="Berlin">Berlin</option>
-                <option value="Rome">Rome</option>
+                <option>Select an answer</option>
+                <option>Genetics</option>
+                <option>For squeezing</option>
+                <option>To inspire those squishy toy companies</option>
+                <option data-correct="true">For the old Alaskan kiss</option>
               </select>
             </div>
+            <div id="toy" style="display: none; color: blue;">I was very tempted to put this as the right answer</div>
+            <div id="alaskan" style="display: none; color: blue;">I only today realized an alaskan kiss is rubbing noses
+              and not cheeks</div>
           </div>
+          <br>
           <div id="question3" class="question">
             <div class="form-group" style="display: inherit;">
-              <label for="q3">Question 3: Who wrote "Hamlet"?</label>
+              <label for="q3">Who wrote "Hamlet"?</label>
               <select id="q3" class="form-control" name="q3" onchange="showNextQuestion(null, this)">
                 <option value="">Select an answer</option>
-                <!-- Add data-correct attribute to the correct answer -->
-                <option value="William Shakespeare" data-correct="true">William Shakespeare</option>
-                <option value="Charles Dickens">Charles Dickens</option>
-                <option value="Jane Austen">Jane Austen</option>
-                <option value="F. Scott Fitzgerald">F. Scott Fitzgerald</option>
+                <option data-correct="true">William Shakespeare</option>
+                <option>Charles Dickens</option>
+                <option>Jane Austen</option>
+                <option>F. Scott Fitzgerald</option>
               </select>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary" style="display: none;">Submit</button>
         </form>
       </div>
     </div>
@@ -117,34 +135,53 @@
 
 <script>
 
+
+
+  //function for fun updates
+  function funUpdates(selectElement){
+    const selectedOption = selectElement.options[selectElement.selectedIndex].text;
+    if (selectedOption === "For the old Alaskan kiss") {
+      document.getElementById("alaskan").style.display = "block";
+    }
+    if (selectedOption === "To inspire those squishy toy companies") {
+      document.getElementById("toy").style.display = "block";
+    }
+
+  }
+
   // Function to show next question and scroll to it
   function showNextQuestion(nextQuestionId, selectElement) {
-    if (selectElement.value !== '') {
-      // Check the correct answer
-      const correctAnswer = checkCorrectAnswer(selectElement);
+    funUpdates(selectElement);
 
-      if (correctAnswer && nextQuestionId === null) {
-        // Trigger hearts effect only for the last question
-        triggerHearts();
-      } else if (correctAnswer) {
-        // Trigger confetti effect for other questions
-        triggerConfetti();
-      } else if (!correctAnswer && nextQuestionId === null){
-        alert('Try again.');
-      }
+    // Check the correct answer
+    const correctAnswer = checkCorrectAnswer(selectElement);
 
-      // Fade in next question
-      if (nextQuestionId) {
-        const nextQuestion = document.getElementById(nextQuestionId);
-        nextQuestion.style.display = 'block';
-        // Scroll to next question
-        nextQuestion.scrollIntoView({ behavior: 'smooth' });
-      } else {
-        // No next question, end of quiz
-      }
-    } else {
-      alert('Please select an answer.');
+    if (correctAnswer && nextQuestionId === null) {
+      // Trigger hearts effect only for the last question
+      triggerHearts();
+    } else if (correctAnswer) {
+      // Trigger confetti effect for other questions
+      triggerConfetti();
+    } else if (!correctAnswer && nextQuestionId === null) {
+      alert('Try again.');
+    } else if (!correctAnswer){
+      // Add shake animation for the wrong answer
+      selectElement.classList.add('shake');
+      setTimeout(() => {
+        selectElement.classList.remove('shake');
+      }, 500);
     }
+
+    // Fade in next question
+    if (nextQuestionId) {
+      const nextQuestion = document.getElementById(nextQuestionId);
+      nextQuestion.style.display = 'block';
+      // Scroll to next question
+      nextQuestion.scrollIntoView({behavior: 'smooth'});
+    } else {
+      // No next question, end of quiz
+    }
+
   }
 
   // Function to check the correct answer
@@ -157,7 +194,7 @@
   function triggerConfetti() {
     const duration = 2000;
     const animationEnd = Date.now() + duration;
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+    const defaults = {startVelocity: 30, spread: 360, ticks: 60, zIndex: 0};
 
     function randomInRange(min, max) {
       return Math.random() * (max - min) + min;
@@ -172,8 +209,14 @@
 
       const particleCount = 20 * (timeLeft / duration);
       // since particles fall down, start a bit higher than random
-      confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
-      confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+      confetti(Object.assign({}, defaults, {
+        particleCount,
+        origin: {x: randomInRange(0.1, 0.3), y: Math.random() - 0.2}
+      }));
+      confetti(Object.assign({}, defaults, {
+        particleCount,
+        origin: {x: randomInRange(0.7, 0.9), y: Math.random() - 0.2}
+      }));
     }, 250);
   }
 
