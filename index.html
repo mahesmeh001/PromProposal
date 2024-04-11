@@ -91,6 +91,9 @@
               <option>Yapping</option>
             </select>
           </div>
+            <div id="smiling" style="display: none; color: blue;">Close but no</div>
+            <div id="sleeping" style="display: none; color: blue;">no bc im not a creepo like someone is...</div>
+
           </div>
           <br>
           <div id="question2" class="question">
@@ -108,19 +111,65 @@
             <div id="alaskan" style="display: none; color: blue;">I only today realized an alaskan kiss is rubbing noses
               and not cheeks</div>
           </div>
+
+
           <br>
           <div id="question3" class="question">
             <div class="form-group" style="display: inherit;">
-              <label for="q3">Who wrote "Hamlet"?</label>
-              <select id="q3" class="form-control" name="q3" onchange="showNextQuestion(null, this)">
+              <label for="q3">Who is the craziest?</label>
+              <select id="q3" class="form-control" name="q3" onchange="showNextQuestion('question4', this)">
                 <option value="">Select an answer</option>
-                <option data-correct="true">William Shakespeare</option>
-                <option>Charles Dickens</option>
-                <option>Jane Austen</option>
-                <option>F. Scott Fitzgerald</option>
+                <option data-correct="true">You (mani)</option>
+                <option>Me (mehul)</option>
+              </select>
+            </div>
+            <div id="me" style="display: none; color: blue;">And that is why you're the craziest</div>
+          </div>
+
+          <br>
+          <div id="question4" class="question">
+            <div class="form-group" style="display: inherit;">
+              <label for="q4">What would happen in a dance off between us?</label>
+              <select id="q4" class="form-control" name="q3" onchange="showNextQuestion('question5', this)">
+                <option value="">Select an answer</option>
+                <option>I would do Bhangra moves and you would do various styles and it would be a good competition.</option>
+                <option data-correct="true">You would find a way to punch me in the balls, winning by eliminating the competition. (ruthless)</option>
+                <option>You would get nervous because we're in public.</option>
+              </select>
+            </div>
+            <div id="elimination" style="display: none; color: blue;">Survival of the fittest I guess</div>
+          </div>
+
+
+          <br>
+          <div id="question5" class="question">
+            <div class="form-group" style="display: inherit;">
+              <label for="q5">What is my favorite aspect of yours?</label>
+              <select id="q5" class="form-control" name="q3" onchange="showNextQuestion('question6', this)">
+                <option value="">Select an answer</option>
+                <option>Your kindness and thoughtfulness in how you treat others, always help people and get amazing gifts</option>
+                <option>Your sense of humor and how you make me laugh so hard</option>
+                <option>Your supportive nature and how you are always there for me in hard times</option>
+                <option>Our overall connection which comes so naturally and pushes me to be better every day</option>
+                <option data-correct="true">All of the above</option>
+                <option></option>
               </select>
             </div>
           </div>
+
+          <br>
+          <div id="question6" class="question">
+            <div class="form-group" style="display: inherit;">
+              <label for="q6">Will you go to prom with me?</label>
+              <select id="q6" class="form-control" name="q3" onchange="showNextQuestion(null, this)">
+                <option value="">Select an answer</option>
+                <option data-correct="true">Yes!</option>
+                <option>No.</option>
+              </select>
+            </div>
+          </div>
+
+
         </form>
       </div>
     </div>
@@ -140,12 +189,27 @@
   //function for fun updates
   function funUpdates(selectElement){
     const selectedOption = selectElement.options[selectElement.selectedIndex].text;
+    console.log(selectElement)
     if (selectedOption === "For the old Alaskan kiss") {
       document.getElementById("alaskan").style.display = "block";
     }
     if (selectedOption === "To inspire those squishy toy companies") {
       document.getElementById("toy").style.display = "block";
     }
+    if (selectedOption === "Me (mehul)") {
+      document.getElementById("me").style.display = "block";
+    }
+    if (selectedOption === "You would find a way to punch me in the balls, winning by eliminating the competition. (ruthless)") {
+      document.getElementById("elimination").style.display = "block";
+    }
+    if (selectedOption === "Sleeping") {
+      document.getElementById("sleeping").style.display = "block";
+    }
+    if (selectedOption === "Smiling") {
+      document.getElementById("smiling").style.display = "block";
+    }
+
+
 
   }
 
