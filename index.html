@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!--  google font-->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+
+  <style>
+
+    .romantic-font {
+      font-family: 'Parisienne', cursive; /* Apply the Parisienne font */
+    }
+
+    /* CSS for hiding questions initially */
+    .question {
+      display: none;
+    }
+
+    /* CSS for hiding questions initially and setting romantic background */
+    body {
+      background: linear-gradient(to bottom right, #ff99cc, #ff6699); /* Gradient from light pink to pink */
+      background-size: cover;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      font-family: 'Cormorant Garamond', serif;
+    }
+    .container {
+      background-color: rgba(255, 255, 255, 0.8); /* Add a semi-transparent white background to the container */
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    /* Heart animation */
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-image: url('https://static.vecteezy.com/system/resources/previews/001/187/438/original/heart-png.png'); /* Heart icon */
+      background-size: cover;
+      animation: flyHearts 5s linear infinite; /* Flying animation */
+    }
+
+    /* Keyframes for flying animation */
+    @keyframes flyHearts {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      100% {
+        transform: translate(-100vw, -100vh) rotate(720deg); /* Move the hearts diagonally and rotate */
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <div id="quiz" class="mt-5">
+        <h1 class="text-center romantic-font">Ultra-Romantic Prom Proposal</h1>
+        <p class="text-center font-italic">Made with love</p>
+        <form id="quiz-form">
+          <div id="question1" class="question">
+            <div class="form-group">
+              <label for="q1">Question 1: What is 2 + 2?</label>
+              <select id="q1" class="form-control" name="q1" onchange="showNextQuestion('question2', this)">
+                <option value="">Select an answer</option>
+                <option value="4" data-correct="true">4</option>
+                <option value="3">3</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+              </select>
+            </div>
+          </div>
+          <div id="question2" class="question">
+            <div class="form-group" style="display: inherit;">
+              <label for="q2">Question 2: What is the capital of France?</label>
+              <select id="q2" class="form-control" name="q2" onchange="showNextQuestion('question3', this)">
+                <option value="">Select an answer</option>
+                <!-- Add data-correct attribute to the correct answer -->
+                <option value="Paris" data-correct="true">Paris</option>
+                <option value="London">London</option>
+                <option value="Berlin">Berlin</option>
+                <option value="Rome">Rome</option>
+              </select>
+            </div>
+          </div>
+          <div id="question3" class="question">
+            <div class="form-group" style="display: inherit;">
+              <label for="q3">Question 3: Who wrote "Hamlet"?</label>
+              <select id="q3" class="form-control" name="q3" onchange="showNextQuestion(null, this)">
+                <option value="">Select an answer</option>
+                <!-- Add data-correct attribute to the correct answer -->
+                <option value="William Shakespeare" data-correct="true">William Shakespeare</option>
+                <option value="Charles Dickens">Charles Dickens</option>
+                <option value="Jane Austen">Jane Austen</option>
+                <option value="F. Scott Fitzgerald">F. Scott Fitzgerald</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" style="display: none;">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.0.1"></script>
+
+<script>
+
+  // Function to show next question and scroll to it
+  function showNextQuestion(nextQuestionId, selectElement) {
+    if (selectElement.value !== '') {
+      // Check the correct answer
+      const correctAnswer = checkCorrectAnswer(selectElement);
+
+      if (correctAnswer && nextQuestionId === null) {
+        // Trigger hearts effect only for the last question
+        triggerHearts();
+      } else if (correctAnswer) {
+        // Trigger confetti effect for other questions
+        triggerConfetti();
+      } else if (!correctAnswer && nextQuestionId === null){
+        alert('Try again.');
+      }
+
+      // Fade in next question
+      if (nextQuestionId) {
+        const nextQuestion = document.getElementById(nextQuestionId);
+        nextQuestion.style.display = 'block';
+        // Scroll to next question
+        nextQuestion.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        // No next question, end of quiz
+      }
+    } else {
+      alert('Please select an answer.');
+    }
+  }
+
+  // Function to check the correct answer
+  function checkCorrectAnswer(selectElement) {
+    const option = selectElement.options[selectElement.selectedIndex];
+    return option.getAttribute('data-correct') === 'true';
+  }
+
+  // Function to trigger confetti effect
+  function triggerConfetti() {
+    const duration = 2000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+    function randomInRange(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    const interval = setInterval(function () {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 20 * (timeLeft / duration);
+      // since particles fall down, start a bit higher than random
+      confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+      confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+    }, 250);
+  }
+
+  // Function to trigger hearts effect
+  function triggerHearts() {
+    const numberOfHearts = 10; // Number of hearts to generate
+    const container = document.querySelector('.container'); // Container element
+
+    // Create heart elements and append them to the container
+    for (let i = 0; i < numberOfHearts; i++) {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
+      heart.style.animationDuration = Math.random() * 2 + 1 + 's'; // Random animation duration between 1 and 3 seconds
+      container.appendChild(heart);
+    }
+  }
+
+  // Show the first question initially
+  document.getElementById('question1').style.display = 'block';
+</script>
+</body>
+</html>
